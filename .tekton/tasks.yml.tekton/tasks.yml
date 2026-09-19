@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cleanup
+spec:
+  steps:
+    - name: cleanup
+      image: python:3.11
+      script: |
+        #!/usr/bin/env python
+        echo "Cleaning up workspace..."
+        rm -rf /workspace/source/*.pyc
+        rm -rf /workspace/source/__pycache__
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: test
+spec:
+  steps:
+    - name: install-dependencies
+      image: python:3.11
+      script: |
+        #!/usr/bin/env python
+        pip install nose
+
+    - name: nose-test
+      image: python:3.11
+      script: |
+        #!/usr/bin/env python
+        pip install nose
+        nosetests
